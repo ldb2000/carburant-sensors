@@ -1,0 +1,105 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 335
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Paris
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Logger
+logger:
+  default: info
+
+sensor:
+  - platform: carburant
+    list_gas_stations:
+      - !secret id
+      - !secret id2
+      - !secret id3
+      - !secret id4
+      - !secret id5
+
+  - platform: min_max
+    name: Gazole le moins cher
+    type: min
+    entity_ids:
+      - sensor.essence_chaponnay_gazole
+      - sensor.essence_heyrieux_gazole
+      - sensor.essence_saint_genis_laval_gazole
+      - sensor.essence_saint_symphorien_d_ozon_gazole
+
+  - platform: min_max
+    name: SP95 le moins cher
+    type: min
+    entity_ids:
+      - sensor.essence_chaponnay_sp95
+      - sensor.essence_heyrieux_sp95
+      - sensor.essence_saint_genis_laval_sp95
+      - sensor.essence_saint_symphorien_d_ozon_sp95
+  - platform: template
+    sensors:
+      essence_gazole_ville_min:
+        friendly_name: "Ville Gazole la moins chere"
+        value_template: >-
+          {% if states('sensor.essence_chaponnay_gazole') == states('sensor.gazole_le_moins_cher') %}
+            Chaponnay - {{ states('sensor.gazole_le_moins_cher') }} €
+          {% elif  state('sensor.essence_heyrieux_gazole') == states('sensor.gazole_le_moins_cher') %}
+            Heyrieux - {{ states('sensor.gazole_le_moins_cher') }} €
+           {% elif  state('sensor.essence_saint_symphorien_d_ozon_gazole') == states('sensor.gazole_le_moins_cher') %}
+            Saint Symphorien d'Ozon - {{ states('sensor.gazole_le_moins_cher') }} €
+          {% else %}
+            Saint Genis Laval - {{ states('sensor.gazole_le_moins_cher') }} €
+          {% endif %}
+      essence_sp95_ville_min:
+        friendly_name: "Ville SP95 la moins chere"
+        value_template: >-
+          {% if states('sensor.essence_chaponnay_gazole') == states('sensor.gazole_le_moins_cher') %}
+            Chaponnay - {{ states('sensor.sp95_le_moins_cher') }} €
+          {% elif  state('sensor.essence_heyrieux_gazole') == states('sensor.gazole_le_moins_cher') %}
+            Heyrieux - {{ states('sensor.sp95_le_moins_cher') }} €
+          {% elif  state('sensor.essence_saint_symphorien_d_ozon_sp95') == states('sensor.gazole_le_moins_cher') %}
+            Saint Symphorien d'Ozon - {{ states('sensor.sp95_le_moins_cher') }} €
+          {% else %}
+            Saint Genis Laval - {{ states('sensor.sp95_le_moins_cher') }} €
+          {% endif %}
+
+automation:
+  - id: Changesensoressence
+    alias: changement du prix de l'essence
+    trigger:
+      platform: state
+      entity_id: sensor.essence_gazole_ville_min
+    action: 
+        - service: notify.mobile_app_iphone
+          data:
+            title: "Changement de prix"
+            message: |
+              Le prix du gazole le moins chere est maintenant
+              {{ state('sensor.essence_gazole_ville_min') }}
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  api_password: !secret  apipass
+
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+default_config:
+
+# Track the sun
+#sun:
+

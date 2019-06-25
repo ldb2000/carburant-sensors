@@ -1,0 +1,13 @@
+{
+    "domain": "carburant",
+    "name": "carburant",
+    "documentation": "https://github.com/ldb2000/carburant-sensors/blob/master/README.md",
+    "requirements": [
+      "request"
+    ],
+    "dependencies": [
+    ],
+    "codeowners": [
+      "@ldb2000"
+    ]
+  }

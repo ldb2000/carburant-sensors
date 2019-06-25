@@ -1,0 +1,6 @@
+secrets.yaml
+home-assistant.log
+.HA_VERSION
+home-assistant_v2.db
+.storage
+custom_components/carburant/__pycache__
