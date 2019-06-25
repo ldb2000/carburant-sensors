@@ -75,8 +75,8 @@ sensor:
           {% endif %}
 
 automation:
-  - id: Changesensoressence
-    alias: changement du prix de l'essence
+  - id: Changement-sensor-gazole-mini
+    alias: changement du prix gazole
     trigger:
       platform: state
       entity_id: sensor.essence_gazole_ville_min
@@ -87,6 +87,18 @@ automation:
             message: |
               Le prix du gazole le moins chere est maintenant
               {{ state('sensor.essence_gazole_ville_min') }}
+  - id: Changement-sensor-SP95-mini
+    alias: changement du prix SP95
+    trigger:
+      platform: state
+      entity_id: sensor.essence_sp95_ville_min
+    action: 
+        - service: notify.mobile_app_iphone
+          data:
+            title: "Changement de prix"
+            message: |
+              Le prix du SP95 le moins chere est maintenant
+              {{ state('sensor.essence_sp95ville_min') }}
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
   api_password: !secret  apipass
