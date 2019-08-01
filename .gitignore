@@ -4,3 +4,5 @@ home-assistant.log
 home-assistant_v2.db
 .storage
 custom_components/carburant/__pycache__
+.cloud
+.vscode

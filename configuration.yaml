@@ -21,14 +21,15 @@ frontend:
 logger:
   default: info
 
+
+
 sensor:
   - platform: carburant
     list_gas_stations:
-      - !secret id
-      - !secret id2
-      - !secret id3
-      - !secret id4
-      - !secret id5
+      - 38540001
+      - 69970001
+      - 69230001
+      - 69360015
 
   - platform: min_max
     name: Gazole le moins cher
@@ -73,7 +74,10 @@ sensor:
           {% else %}
             Saint Genis Laval - {{ states('sensor.sp95_le_moins_cher') }} €
           {% endif %}
-
+  - platform: rest
+    resource: https://api.atmo-aura.fr/communes/38519/indices?date=now&api_token=5157a1a8cd49a9e4a49bc52230e53042
+    name: indice_pollution
+    value_template: '{{ value_json.indices.valeur| round(0) }}'
 automation:
   - id: Changement-sensor-gazole-mini
     alias: changement du prix gazole
@@ -99,6 +103,7 @@ automation:
             message: |
               Le prix du SP95 le moins chere est maintenant
               {{ state('sensor.essence_sp95ville_min') }}
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
   api_password: !secret  apipass
