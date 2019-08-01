@@ -1,6 +1,6 @@
 # carburant sensor for home assistant
 
-This custom_component monitor the price of french fuel stations. 
+This custom_component monitor the price of french Gas stations. 
 
 ## Installation
 
@@ -28,6 +28,6 @@ id1 or id2 in this example could be retreived from the file PrixCarturants_insta
 
 ## Example of automation
 
-The configuration.yaml example show some kinds of automation to retreive the cheapest fuel station. 
+The configuration.yaml example show some kinds of automation to retreive the cheapest gas station. 
 
 
